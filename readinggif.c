@@ -12,7 +12,7 @@ typedef unsigned char BYTE;		// 1 Byte of data
 typedef unsigned short WORD;	// 2 Byte of Data
 
 // Structure contains "Header" & "Logical Screen Descriptor"
-typedef struct _GifHeader	
+typedef struct _GifHeader
 {
   // Header
   BYTE Signature[3];     /* Header Signature (always "GIF") */
@@ -26,8 +26,8 @@ typedef struct _GifHeader
 } GIFHEAD;
 
 // Backbone Structure for colour entries of both Global and Local Colour Table
-typedef struct _GifColorTable	
-{	
+typedef struct _GifColorTable
+{
 	BYTE Red;          /* Red Color Element       */
 	BYTE Green;        /* Green Color Element     */
 	BYTE Blue;         /* Blue Color Element      */
@@ -48,74 +48,74 @@ typedef struct _GifImageDescriptor
 typedef struct _ImageData
 {
 	BYTE Compression;
-	BYTE Size; 
+	BYTE Size;
 	BYTE Image;
 } IMGDATA;
 
 
 int main()
-{	
+{
 	int i;								// i = loop variable
 	FILE *fp,*fr;						// fp = file pointer for reading, fr = file pointer for writing
 	fp = fopen("gif.gif87","rb");		// source destination
 	fr = fopen("test2.gif87","wb");		// target destination
-	
+
 	if(fp == NULL || fr == NULL)		// to check for any errors in opening files
 	{
 		printf("Nope");
 		exit(1);
 	}
-	
-	// initialising the GIF Header	
+
+	// initialising the GIF Header
 	GIFHEAD *header;
 	header = (GIFHEAD*)malloc(sizeof(GIFHEAD));
 
-	// reading and writing elements present in the header	
+	// reading and writing elements present in the header
 	fread(&(header->Signature),sizeof(BYTE),3,fp);
 	printf("\nSignature = %s",header->Signature);
 	fwrite(&(header->Signature),sizeof(BYTE),3,fr);
-	
+
 	fread(&(header->Version),sizeof(BYTE),3,fp);
 	printf("\nVersion = %s",header->Version);
 	fwrite(&(header->Version),sizeof(BYTE),3,fr);
-	
+
 	fread(&(header->ScreenWidth),sizeof(WORD),1,fp);
 	printf("\nScreen Width = %d",header->ScreenWidth);
 	fwrite(&(header->ScreenWidth),sizeof(WORD),1,fr);
-	
+
 	fread(&(header->ScreenHeight),sizeof(WORD),1,fp);
 	printf("\nScreen Height = %d",header->ScreenHeight);
 	fwrite(&(header->ScreenHeight),sizeof(WORD),1,fr);
-	
+
 	fread(&(header->Packed),sizeof(BYTE),1,fp);
 	printf("\nPacked = %d",header->Packed);
 	fwrite(&(header->Packed),sizeof(BYTE),1,fr);
-	
+
 	// to calculate size of global color table
 	int SizeOfGCT = three_bit(header->Packed,0);
 	int NoOfGCTEnt = (1L << (SizeOfGCT + 1));
-	
+
 	// information broken down from "header->Packed"
 	printf("\nGlobal Color Table Flag = %d",nth_bit(header->Packed,7));									// indicates the presence of Global Color Table
 	printf("\nColor Resolution = %d",three_bit(header->Packed,4));										// used for indicating the bits per color assigned to a pixel
 	printf("\nGlobal Color Sort Flag = %d (it is '0' for version 87a)",nth_bit(header->Packed,3));		// indicates whether Global Color Table is to be sorted
 	printf("\nNumber of Entries of Global Color Table = %d",NoOfGCTEnt);								// indicates the number of Global Color Entries
 	printf("\nNo of Bits for Color Palette = %d",three_bit(header->Packed,4) + 1);						// indicates the bit per colour assigned to a pixel
-	
+
 	fread(&(header->BackgroundColor),sizeof(BYTE),1,fp);
 	printf("\nBackground Color = %d",header->BackgroundColor);
 	fwrite(&(header->BackgroundColor),sizeof(BYTE),1,fr);
-	
+
 	fread(&(header->AspectRatio),sizeof(BYTE),1,fp);
 	printf("\nAspect Ratio = %d",header->AspectRatio);
 	fwrite(&(header->AspectRatio),sizeof(BYTE),1,fr);
-	
+
 	// Reads Global Color Table if present
 	if(nth_bit(header->Packed,7) == 1)
 	{
 		// initialising Global Color Table Entries
 		GIFCOLORTABLE glo[NoOfGCTEnt];
-	
+
 		// Reading each Entry of Global Color Table
 		for(i = 0;i < NoOfGCTEnt;i++)
 		{
@@ -128,18 +128,18 @@ int main()
 			fwrite(&(glo[i].Blue),sizeof(BYTE),1,fr);
 		}
 	}
-	
+
 	// Image section
 	while(1)
 	{
 		// initialising Image Descriptor
 		GIFIMGDESC *img;
 		img = (GIFIMGDESC*)malloc(sizeof(GIFIMGDESC));
-	
+
 		fread(&(img->Separator),sizeof(BYTE),1,fp);
 		printf("\nImage Separator = %d",img->Separator);	// indicates the presence of image or end of file
 		fwrite(&(img->Separator),sizeof(BYTE),1,fr);
-		
+
 		// To check for end of file
 		if(img->Separator == 59)
 		{
@@ -150,43 +150,43 @@ int main()
 			fclose(fr);
 			break;
 		}
-	
+
 		fread(&(img->Left),sizeof(WORD),1,fp);
 		printf("\nImage Left Coordinate = %d",img->Left);
 		fwrite(&(img->Left),sizeof(WORD),1,fr);
-	
+
 		fread(&(img->Top),sizeof(WORD),1,fp);
 		printf("\nImage Top Coordinate = %d",img->Top);
 		fwrite(&(img->Top),sizeof(WORD),1,fr);
-	
+
 		fread(&(img->Width),sizeof(WORD),1,fp);
 		printf("\nImage Width in Pixels = %d",img->Width);
 		fwrite(&(img->Width),sizeof(WORD),1,fr);
-	
+
 		fread(&(img->Height),sizeof(WORD),1,fp);
 		printf("\nImage Height = %d",img->Height);
 		fwrite(&(img->Height),sizeof(WORD),1,fr);
-	
+
 		fread(&(img->Packed),sizeof(BYTE),1,fp);
 		printf("\nPacked = %d",img->Packed);
 		fwrite(&(img->Packed),sizeof(BYTE),1,fr);
-		
+
 		// to calculate the size of Local Color Table
 		int SizeOfLCT = three_bit(img->Packed,0);
 		int NoOfLCTEnt = 1L << (SizeOfLCT + 1);
-		
+
 		// information broken down from "img->Packed"
 		printf("\nImage Color Table Flag = %d",nth_bit(img->Packed,7));
 		printf("\nInterlace Flag = %d",nth_bit(img->Packed,6));
 		printf("\nSort Flag = %d",nth_bit(img->Packed,5));
 		printf("\nReserved For Future Use = %d%d",nth_bit(img->Packed,5),nth_bit(img->Packed,4));
 		printf("\nNumber of Entries of Local Colour Table = %d",NoOfLCTEnt);
-		
+
 		// Reads Local Color Table if present
 		if(nth_bit(img->Packed,7) == 1)
 		{
 			GIFCOLORTABLE loc[NoOfLCTEnt];
-			
+
 			// Reading each Entry of Local Color Table
 			for(i = 0;i < NoOfLCTEnt;i++)
 			{
@@ -199,15 +199,15 @@ int main()
 				fwrite(&(loc[i].Blue),sizeof(BYTE),1,fr);
 			}
 		}
-		
+
 		// initialising Image Data
 		IMGDATA *data;
 		data = (IMGDATA*)malloc(sizeof(IMGDATA));
-		
+
 		fread(&data->Compression,sizeof(BYTE),1,fp);
 		printf("\nCompression Factor = %x",data->Compression);
 		fwrite(&data->Compression,sizeof(BYTE),1,fr);
-		
+
 		// Reading the image data
 		do
 		{
@@ -222,8 +222,8 @@ int main()
 			}
 		}while(data->Size != 0);							// image data block ends when size = 0
 		free(img);
-	}	
-	
+	}
+
 
 	return 0;
 }
