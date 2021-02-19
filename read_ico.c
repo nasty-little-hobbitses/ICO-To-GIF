@@ -81,7 +81,7 @@ BITMAPINFOHEADER* z;
 
 
 
-fp = fopen("down1.ico","rb");
+fp = fopen("down.ico","rb");
     if (fp == NULL)
         printf("mcph\n" );
 
