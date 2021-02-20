@@ -57,8 +57,8 @@ int main()
 {
 	int i;								// i = loop variable
 	FILE *fp,*fr;						// fp = file pointer for reading, fr = file pointer for writing
-	fp = fopen("gif.gif87","rb");		// source destination
-	fr = fopen("test2.gif87","wb");		// target destination
+	fp = fopen("down.gif","rb");		// source destination
+	fr = fopen("test2.gif","wb");		// target destination
 
 	if(fp == NULL || fr == NULL)		// to check for any errors in opening files
 	{

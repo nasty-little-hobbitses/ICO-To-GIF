@@ -81,7 +81,7 @@ BITMAPINFOHEADER* z;
 
 
 
-fp = fopen("down1.ico","rb");
+fp = fopen("1.ico","rb");
     if (fp == NULL)
         printf("mcph\n" );
 
@@ -115,14 +115,24 @@ z = (BITMAPINFOHEADER*)malloc( sizeof( BITMAPINFOHEADER) );
 fread(z,sizeof(BITMAPINFOHEADER),1,fp);
 printf("%d %d %d %d\n",z->biBitCount,z->biWidth,z->biHeight,z->biSize );
 printf("%ld\n", ftell(fp));
+
 int dim = y->bHeight*y->bWidth;
-RGBQUAD arr[dim];
+RGBQUAD arr[256];
 int i = 0;
-while(i < dim){
+while(i < 256){
   fread(&arr[i], sizeof(RGBQUAD),1,fp);
-  printf("%d %d %d %d\n",i, arr[i].rgbBlue,arr[i].rgbGreen,arr[i].rgbRed);
+  printf("%d %d %d %d %d\n",i, arr[i].rgbBlue,arr[i].rgbGreen,arr[i].rgbRed,arr[i].rgbReserved);
   i++;
 }
 
 printf("%ld\n",ftell(fp) );
+
+int j = 0;
+BYTE bits[dim];
+while( j < dim){
+  fread(&bits[j],1,1,fp);
+  printf("%d,", bits[j]);
+  j++;
+}
+
 }
