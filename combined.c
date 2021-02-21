@@ -158,14 +158,14 @@ int main()
 	printf("Number of Images : %d\n", x->idCount);
 	
 	
-	fread(y,sizeof(ICONDIRENTRY),1,fr);
+	fread(&y,sizeof(ICONDIRENTRY),1,fr);
 	printf("Width = %d Height = %d Bits per pixel = %d colour count = %d\n", y->bWidth,y->bHeight,y->wBitCount, y->bColorCount);
 	printf("Size of image resource : %d\n",  y->dwBytesInRes);
 	printf("Offset to the image : %d\n",  y->dwImageOffset);
 	
 	fseek( fr, y->dwImageOffset , SEEK_SET );
 	
-	fread(z,sizeof(BITMAPINFOHEADER),1,fr);
+	fread(&z,sizeof(BITMAPINFOHEADER),1,fr);
 	
 	printf("%d %d %d %d\n",z->biBitCount,z->biWidth,z->biHeight,z->biSize );
 
@@ -346,7 +346,7 @@ int main()
 	free(z);
 	free(header);
 	fclose(fr);
-	fcolse(fw);
+	fclose(fw);
 	
 	return 0;
 }
