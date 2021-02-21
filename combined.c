@@ -234,6 +234,8 @@ int main()
 		// initialising Global Color Table Entries
 		GIFCOLORTABLE glo[NoOfGCTEnt];
 		RGBQUAD arr[256];
+		
+		printf("\nGlobal Color Table");
 	
 		// Reading each Entry of Global Color Table
 		for(i = 0;i < NoOfGCTEnt;i++)
@@ -242,14 +244,14 @@ int main()
 			glo[i].Red = arr[i].rgbRed;
 			glo[i].Green = arr[i].rgbGreen;
 			glo[i].Blue = arr[i].rgbBlue;
-			printf("\n[%3d][%3d][%3d]%d",glo[i].Red,glo[i].Green,glo[i].Blue,i);
+			printf("\n[%3d][%3d][%3d] : %d",glo[i].Red,glo[i].Green,glo[i].Blue,i);
 			fwrite(&(glo[i].Red),sizeof(BYTE),1,fw);
 			fwrite(&(glo[i].Green),sizeof(BYTE),1,fw);
 			fwrite(&(glo[i].Blue),sizeof(BYTE),1,fw);
 		}
 	}
 
-	int dim = y->bHeight*y->bWidth;
+/*	int dim = y->bHeight*y->bWidth;
 	int j = 0;
 	BYTE bits[dim];
 	while( j < dim){
@@ -257,7 +259,8 @@ int main()
 	  printf("%d,", bits[j]);
 	  j++;
 	}
-
+*/
+	
 	// Image section
 /*	while(1)
 	{
