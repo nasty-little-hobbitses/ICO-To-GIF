@@ -229,8 +229,8 @@ int main()
 	fwrite(&(header->AspectRatio),sizeof(BYTE),1,fw);
 	
 		// Reads Global Color Table if present
-//	if(nth_bit(header->Packed,7) == 1)
-//	{
+	if(nth_bit(header->Packed,7) == 1)
+	{
 		// initialising Global Color Table Entries
 		GIFCOLORTABLE glo[NoOfGCTEnt];
 		RGBQUAD arr[256];
@@ -247,7 +247,7 @@ int main()
 			fwrite(&(glo[i].Green),sizeof(BYTE),1,fw);
 			fwrite(&(glo[i].Blue),sizeof(BYTE),1,fw);
 		}
-//	}
+	}
 
 	int dim = y->bHeight*y->bWidth;
 	int j = 0;
