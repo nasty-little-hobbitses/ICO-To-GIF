@@ -31,45 +31,45 @@ typedef struct tagICONDIRENTRY
 
 typedef struct tagICONDIR
 {
-    WORD           idReserved;   // Reserved (must be 0)
-    WORD           idType;       // Resource Type (1 for icons)
-    WORD           idCount;      // How many images?
+        WORD           idReserved;   // Reserved (must be 0)
+        WORD           idType;       // Resource Type (1 for icons)
+        WORD           idCount;      // How many images?
 
 } ICONDIR, *LPICONDIR;
 
 typedef struct tagBITMAPINFOHEADER
 {
-unsigned int biSize;  //specifies the number of bytes required by the struct
-unsigned int biWidth;  //specifies width in pixels
-unsigned int biHeight;  //species height in pixels
-WORD biPlanes; //specifies the number of color planes, must be 1
-WORD biBitCount; //specifies the number of bit per pixel
-int biCompression;//spcifies the type of compression
-int biSizeImage;  //size of image in bytes
-double g1;
-double g2; //number of colors that are important
+        unsigned int biSize;  //specifies the number of bytes required by the struct
+        unsigned int biWidth;  //specifies width in pixels
+        unsigned int biHeight;  //species height in pixels
+        WORD biPlanes; //specifies the number of color planes, must be 1
+        WORD biBitCount; //specifies the number of bit per pixel
+        int biCompression;//spcifies the type of compression
+        int biSizeImage;  //size of image in bytes
+        double g1;
+        double g2; //number of colors that are important
 }BITMAPINFOHEADER;
 
 typedef struct tagRGBQUAD {
-  BYTE rgbBlue;
-  BYTE rgbGreen;
-  BYTE rgbRed;
-  BYTE rgbReserved;
+        BYTE rgbBlue;
+        BYTE rgbGreen;
+        BYTE rgbRed;
+        BYTE rgbReserved;
 } RGBQUAD;
 
 typedef struct tagICONIMAGE {
 
-  BITMAPINFOHEADER   icHeader;      // DIB header
-   RGBQUAD         icColors[1];   // Color table
-   BYTE            icXOR[1];      // DIB bits for XOR mask
-   BYTE            icAND[1];      // DIB bits for AND mask
+        BITMAPINFOHEADER   icHeader;      // DIB header
+        RGBQUAD         icColors[1];   // Color table
+        BYTE            icXOR[1];      // DIB bits for XOR mask
+        BYTE            icAND[1];      // DIB bits for AND mask
 } ICONIMAGE, *LPICONIMAGE;
 
 typedef struct {
-   unsigned char blue;
-   unsigned char green;
-   unsigned char red;
-   unsigned char alpha_trans;
+        unsigned char blue;
+        unsigned char green;
+        unsigned char red;
+        unsigned char alpha_trans;
 } tPixel;
 
 /*----------------------------------------------------------------------------------End of Ico Image Structures-----------------------------------------------------------------------------------------------*/
@@ -79,15 +79,15 @@ typedef struct {
 // Structure contains "Header" & "Logical Screen Descriptor"
 typedef struct _GifHeader	
 {
-  // Header
-  BYTE Signature[3];     /* Header Signature (always "GIF") */
-  BYTE Version[3];       /* GIF format version("87a" or "89a") */
-  // Logical Screen Descriptor
-  WORD ScreenWidth;      /* Width of Display Screen in Pixels */
-  WORD ScreenHeight;     /* Height of Display Screen in Pixels */
-  BYTE Packed;           /* Screen and Color Map Information */
-  BYTE BackgroundColor;  /* Background Color Index */
-  BYTE AspectRatio;      /* Pixel Aspect Ratio */
+        // Header
+        BYTE Signature[3];     /* Header Signature (always "GIF") */
+        BYTE Version[3];       /* GIF format version("87a" or "89a") */
+        // Logical Screen Descriptor
+        WORD ScreenWidth;      /* Width of Display Screen in Pixels */
+        WORD ScreenHeight;     /* Height of Display Screen in Pixels */
+        BYTE Packed;           /* Screen and Color Map Information */
+        BYTE BackgroundColor;  /* Background Color Index */
+        BYTE AspectRatio;      /* Pixel Aspect Ratio */
 } GIFHEAD;
 
 // Backbone Structure for colour entries of both Global and Local Colour Table
@@ -197,11 +197,11 @@ int main()
 	printf("\nVersion = %s",header->Version);
 	fwrite(&(header->Version),sizeof(BYTE),3,fw);
 	
-	header->ScreenWidth = 1920;
+	header->ScreenWidth = 58;
 	printf("\nScreen Width = %d",header->ScreenWidth);
 	fwrite(&(header->ScreenWidth),sizeof(WORD),1,fw);
 	
- 	header->ScreenHeight = 1080;
+ 	header->ScreenHeight = 58;
 	printf("\nScreen Height = %d",header->ScreenHeight);
 	fwrite(&(header->ScreenHeight),sizeof(WORD),1,fw);
 	
@@ -234,8 +234,6 @@ int main()
 		// initialising Global Color Table Entries
 		GIFCOLORTABLE glo[NoOfGCTEnt];
 		RGBQUAD arr[256];
-		
-		printf("\nGlobal Color Table");
 	
 		// Reading each Entry of Global Color Table
 		for(i = 0;i < NoOfGCTEnt;i++)
@@ -244,121 +242,67 @@ int main()
 			glo[i].Red = arr[i].rgbRed;
 			glo[i].Green = arr[i].rgbGreen;
 			glo[i].Blue = arr[i].rgbBlue;
-			printf("\n[%3d][%3d][%3d] : %d",glo[i].Red,glo[i].Green,glo[i].Blue,i);
+			printf("\n[%3d][%3d][%3d]%d",glo[i].Red,glo[i].Green,glo[i].Blue,i);
 			fwrite(&(glo[i].Red),sizeof(BYTE),1,fw);
 			fwrite(&(glo[i].Green),sizeof(BYTE),1,fw);
 			fwrite(&(glo[i].Blue),sizeof(BYTE),1,fw);
 		}
 	}
 
-/*	int dim = y->bHeight*y->bWidth;
+        // Local Descriptor Start
+
+        GIFIMGDESC *descriptor = (GIFIMGDESC*)malloc(sizeof(GIFIMGDESC));
+        descriptor->Separator = ',';
+        fwrite(&descriptor->Separator,1,1,fw);
+
+        descriptor->Left = 0;
+        fwrite(&descriptor->Left,sizeof(WORD),1,fw);
+
+        descriptor->Top = 0;
+        fwrite(&descriptor->Top,sizeof(WORD),1,fw);
+
+        descriptor->Width = y->bWidth;
+        fwrite(&descriptor->Width,sizeof(WORD),1,fw);
+
+        descriptor->Height = y->bHeight;
+        fwrite(&descriptor->Height,sizeof(WORD),1,fw);
+
+        descriptor->Packed = 0;
+        fwrite(&descriptor->Packed,sizeof(BYTE),1,fw);
+
+        // Local Descriptor End
+        // Image Block Start
+
+        BYTE Comp = SizeOfGCT + 1;
+        fwrite(&Comp,1,1,fw);
+
+	int dim = y->bHeight*y->bWidth;
 	int j = 0;
+        BYTE sBlkSiz = y->bWidth;
+        BYTE sBlkSizEnd = 0;
+        BYTE zero = 0;
+        BYTE clCode = 255;
+        BYTE EOICode = 255;
 	BYTE bits[dim];
-	while( j < dim){
-	  fread(&bits[j],1,1,fr);
-	  printf("%d,", bits[j]);
-	  j++;
+	while(j < dim)
+        {
+	        if(j % y->bHeight == 0)
+                {
+                        fwrite(&sBlkSiz,1,1,fw);
+                        // fwrite(&clCode,1,1,fw);
+                }
+                fread(&bits[j],1,1,fr);
+	        printf("%d,", bits[j]);
+                fwrite(bits + j,1,1,fw);
+	        j++;
 	}
-*/
-	
-	// Image section
-/*	while(1)
-	{
-		// initialising Image Descriptor
-		GIFIMGDESC *img;
-		img = (GIFIMGDESC*)malloc(sizeof(GIFIMGDESC));
-	
-		fread(&(img->Separator),sizeof(BYTE),1,fp);
-		printf("\nImage Separator = %d",img->Separator);	// indicates the presence of image or end of file
-		fwrite(&(img->Separator),sizeof(BYTE),1,fr);
-		
-		// To check for end of file
-		if(img->Separator == 59)
-		{
-			printf("\nEnd of File");
-			free(img);
-			free(header);
-			fclose(fp);
-			fclose(fr);
-			break;
-		}
-	
-		fread(&(img->Left),sizeof(WORD),1,fp);
-		printf("\nImage Left Coordinate = %d",img->Left);
-		fwrite(&(img->Left),sizeof(WORD),1,fr);
-	
-		fread(&(img->Top),sizeof(WORD),1,fp);
-		printf("\nImage Top Coordinate = %d",img->Top);
-		fwrite(&(img->Top),sizeof(WORD),1,fr);
-	
-		fread(&(img->Width),sizeof(WORD),1,fp);
-		printf("\nImage Width in Pixels = %d",img->Width);
-		fwrite(&(img->Width),sizeof(WORD),1,fr);
-	
-		fread(&(img->Height),sizeof(WORD),1,fp);
-		printf("\nImage Height = %d",img->Height);
-		fwrite(&(img->Height),sizeof(WORD),1,fr);
-	
-		//fread(&(img->Packed),sizeof(BYTE),1,fp);
-		img->Packed = 0;
-		printf("\nPacked = %d",img->Packed);
-		fwrite(&(img->Packed),sizeof(BYTE),1,fr);
-		
-		fseek(fp,sizeof(BYTE),SEEK_CUR);
-		
-		// to calculate the size of Local Color Table
-		int SizeOfLCT = three_bit(img->Packed,0);
-		int NoOfLCTEnt = 1L << (SizeOfLCT + 1);
-		
-		// information broken down from "img->Packed"
-		printf("\nImage Color Table Flag = %d",nth_bit(img->Packed,7));
-		printf("\nInterlace Flag = %d",nth_bit(img->Packed,6));
-		printf("\nSort Flag = %d",nth_bit(img->Packed,5));
-		printf("\nReserved For Future Use = %d%d",nth_bit(img->Packed,5),nth_bit(img->Packed,4));
-		printf("\nNumber of Entries of Local Colour Table = %d",NoOfLCTEnt);
-		
-		// Reads Local Color Table if present
-		if(nth_bit(img->Packed,7) == 1)
-		{
-			GIFCOLORTABLE loc[NoOfLCTEnt];
-			
-			// Reading each Entry of Local Color Table
-			for(i = 0;i < NoOfLCTEnt;i++)
-			{
-				fread(&(loc[i].Red),sizeof(BYTE),1,fp);
-				fread(&(loc[i].Green),sizeof(BYTE),1,fp);
-				fread(&(loc[i].Blue),sizeof(BYTE),1,fp);
-				printf("\n[%3d][%3d][%3d]%d",loc[i].Red,loc[i].Green,loc[i].Blue,i);
-				fwrite(&(loc[i].Red),sizeof(BYTE),1,fr);
-				fwrite(&(loc[i].Green),sizeof(BYTE),1,fr);
-				fwrite(&(loc[i].Blue),sizeof(BYTE),1,fr);
-			}
-		}
-		
-		// initialising Image Data
-		IMGDATA *data;
-		data = (IMGDATA*)malloc(sizeof(IMGDATA));
-		
-		fread(&data->Compression,sizeof(BYTE),1,fp);
-		printf("\nCompression Factor = %x",data->Compression);
-		fwrite(&data->Compression,sizeof(BYTE),1,fr);
-		
-		// Reading the image data
-		do
-		{
-			fread(&data->Size,sizeof(BYTE),1,fp);
-			printf("\nSize = %x\n",data->Size);				// indicates the size of sub-block containg pixel data
-			fwrite(&data->Size,sizeof(BYTE),1,fr);
-			for(i = 0;i < data->Size;i++)					// reading pixel data
-			{
-				fread(&data->Image,sizeof(BYTE),1,fp);
-				printf("%x ",data->Image);
-				fwrite(&data->Image,sizeof(BYTE),1,fr);
-			}
-		}while(data->Size != 0);							// image data block ends when size = 0
-		free(img);
-	}	*/
-	
+
+        // fwrite(&sBlkSizEnd,1,1,fw);
+        // fwrite(&EOICode,1,1,fw);
+        // fwrite(&zero,1,1,fw);
+        BYTE ter = ';';
+        fwrite(&ter,1,1,fw);
+
 	free(x);
 	free(y);
 	free(z);
