@@ -2,9 +2,6 @@
 #include<stdlib.h>
 #include<math.h>
 #include"ourheader.h"
-// Function prototypes
-int nth_bit(int,int);		// Returns the nth bit of a number in binary form
-int three_bit(int,int);		// Returns decimal form of 3 bits starting with lsb as nth bit of a number Eg: 111 is returned as 7
 
 /*--------------------------------------------------------------------------------------Defining Data Types---------------------------------------------------------------------------------------------------*/
 
@@ -114,12 +111,12 @@ typedef struct _ImageData
 
 /*----------------------------------------------------------------------------------End of Gif Image Structures-----------------------------------------------------------------------------------------------*/
 
-int main()
+int main(int argc, char *argv[])
 {
 	int i;
 	FILE *fr,*fw;                   // fr = source file, fw = dest file
-	fr = fopen("1.ico","rb");
-	fw = fopen("final.gif","wb");
+	fr = fopen(argv[1],"rb");
+	fw = fopen(argv[2],"wb");
 	if(fr == NULL || fw == NULL)
 	{
 		printf("Fail");
