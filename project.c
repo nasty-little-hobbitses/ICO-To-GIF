@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
-
+#include"ourheader.h"
 // Function prototypes
 int nth_bit(int,int);		// Returns the nth bit of a number in binary form
 int three_bit(int,int);		// Returns decimal form of 3 bits starting with lsb as nth bit of a number Eg: 111 is returned as 7
@@ -144,49 +144,49 @@ int main()
 
 
 	fread(&(x->idReserved), sizeof(WORD),1,fr);
-	printf("Reserved : %d\n", x->idReserved);
+	//printf("Reserved : %d\n", x->idReserved);
 
 	fread(&(x->idType), sizeof(WORD),1,fr);
-	printf("Id Type: %d\n", x->idType);
+	//printf("Id Type: %d\n", x->idType);
 
 	fread(&(x->idCount), sizeof(WORD),1,fr);
-	printf("Number of Images : %d\n", x->idCount);
+	//printf("Number of Images : %d\n", x->idCount);
 
 
 	fread(y,sizeof(ICONDIRENTRY),1,fr);
-	printf("Width = %d Height = %d Bits per pixel = %d colour count = %d\n", y->bWidth,y->bHeight,y->wBitCount, y->bColorCount);
-	printf("Size of image resource : %d\n",  y->dwBytesInRes);
-	printf("Offset to the image : %d\n",  y->dwImageOffset);
+	//printf("Width = %d Height = %d Bits per pixel = %d colour count = %d\n", y->bWidth,y->bHeight,y->wBitCount, y->bColorCount);
+	//printf("Size of image resource : %d\n",  y->dwBytesInRes);
+	//printf("Offset to the image : %d\n",  y->dwImageOffset);
 
 	fseek( fr, y->dwImageOffset , SEEK_SET );
 
 	fread(z,sizeof(BITMAPINFOHEADER),1,fr);
 
-	printf("%d %d %d %d\n",z->biBitCount,z->biWidth,z->biHeight,z->biSize );
+	//printf("%d %d %d %d\n",z->biBitCount,z->biWidth,z->biHeight,z->biSize );
 
 
 	header->Signature[0] = 71;
 	header->Signature[1] = 73;
 	header->Signature[2] = 70;
-	printf("\nSignature = %s",header->Signature);
+	//printf("\nSignature = %s",header->Signature);
 	fwrite(&(header->Signature),sizeof(BYTE),3,fw);
 
 	header->Version[0] = 56;
 	header->Version[1] = 55;
 	header->Version[2] = 97;
-	printf("\nVersion = %s",header->Version);
+	//printf("\nVersion = %s",header->Version);
 	fwrite(&(header->Version),sizeof(BYTE),3,fw);
 
 	header->ScreenWidth = y->bWidth;
-	printf("\nScreen Width = %d",header->ScreenWidth);
+	//printf("\nScreen Width = %d",header->ScreenWidth);
 	fwrite(&(header->ScreenWidth),sizeof(WORD),1,fw);
 
  	header->ScreenHeight = y->bHeight;
-	printf("\nScreen Height = %d",header->ScreenHeight);
+	//printf("\nScreen Height = %d",header->ScreenHeight);
 	fwrite(&(header->ScreenHeight),sizeof(WORD),1,fw);
 
 	header->Packed = 247;
-	printf("\nPacked = %d",header->Packed);
+	//printf("\nPacked = %d",header->Packed);
 	fwrite(&(header->Packed),sizeof(BYTE),1,fw);
 
 	// to calculate size of global color table
@@ -194,18 +194,18 @@ int main()
 	int NoOfGCTEnt = (1L << (SizeOfGCT + 1));
 
 	// information broken down from "header->Packed"
-	printf("\nGlobal Color Table Flag = %d",nth_bit(header->Packed,7));									// indicates the presence of Global Color Table
-	printf("\nColor Resolution = %d",three_bit(header->Packed,4));										// used for indicating the bits per color assigned to a pixel
-	printf("\nGlobal Color Sort Flag = %d (it is '0' for version 87a)",nth_bit(header->Packed,3));		// indicates whether Global Color Table is to be sorted
-	printf("\nNumber of Entries of Global Color Table = %d",NoOfGCTEnt);								// indicates the number of Global Color Entries
-	printf("\nNo of Bits for Color Palette = %d",three_bit(header->Packed,4) + 1);						// indicates the bit per colour assigned to a pixel
+	//printf("\nGlobal Color Table Flag = %d",nth_bit(header->Packed,7));									// indicates the presence of Global Color Table
+	//printf("\nColor Resolution = %d",three_bit(header->Packed,4));										// used for indicating the bits per color assigned to a pixel
+	//printf("\nGlobal Color Sort Flag = %d (it is '0' for version 87a)",nth_bit(header->Packed,3));		// indicates whether Global Color Table is to be sorted
+	//printf("\nNumber of Entries of Global Color Table = %d",NoOfGCTEnt);								// indicates the number of Global Color Entries
+	//printf("\nNo of Bits for Color Palette = %d",three_bit(header->Packed,4) + 1);						// indicates the bit per colour assigned to a pixel
 
 	header->BackgroundColor = 0;
-	printf("\nBackground Color = %d",header->BackgroundColor);
+	//printf("\nBackground Color = %d",header->BackgroundColor);
 	fwrite(&(header->BackgroundColor),sizeof(BYTE),1,fw);
 
 	header->AspectRatio = 0;
-	printf("\nAspect Ratio = %d",header->AspectRatio);
+	//printf("\nAspect Ratio = %d",header->AspectRatio);
 	fwrite(&(header->AspectRatio),sizeof(BYTE),1,fw);
 
 
@@ -217,7 +217,7 @@ int main()
 		{
 			fread(&arr[i], sizeof(RGBQUAD),1,fr);
 
-			printf("%d %d %d %d %d\n",i, arr[i].rgbBlue,arr[i].rgbGreen,arr[i].rgbRed,arr[i].rgbReserved);
+			//printf("%d %d %d %d %d\n",i, arr[i].rgbBlue,arr[i].rgbGreen,arr[i].rgbRed,arr[i].rgbReserved);
 
 			fwrite(&(arr[i].rgbRed),sizeof(BYTE),1,fw);
 			fwrite(&(arr[i].rgbGreen),sizeof(BYTE),1,fw);
@@ -225,7 +225,7 @@ int main()
 
 		}
 
-  printf("%ld\n",ftell(fr) );
+  //printf("%ld\n",ftell(fr) );
 	int dim = y->bHeight*y->bWidth;
 	int j = 0;
 	BYTE bits[dim];
@@ -238,10 +238,10 @@ int main()
      bits[j] = 32;
     }
 
-	  printf("%d,", bits[j]);
+	  //printf("%d,", bits[j]);
 	  j++;
 	}
-  printf("%ld\n",ftell(fr) );
+  //printf("%ld\n",ftell(fr) );
 
 
 		GIFIMGDESC *img;
@@ -254,29 +254,29 @@ int main()
     img->Height = y->bHeight;
 
 
-		printf("\nImage Separator = %d",img->Separator);	// indicates the presence of image or end of file
+		//printf("\nImage Separator = %d",img->Separator);	// indicates the presence of image or end of file
 		fwrite(&(img->Separator),sizeof(BYTE),1,fw);
 
 
 
-		printf("\nImage Left Coordinate = %d",img->Left);
+		//printf("\nImage Left Coordinate = %d",img->Left);
 		fwrite(&(img->Left),sizeof(WORD),1,fw);
 
 
-		printf("\nImage Top Coordinate = %d",img->Top);
+		//printf("\nImage Top Coordinate = %d",img->Top);
 		fwrite(&(img->Top),sizeof(WORD),1,fw);
 
 
-		printf("\nImage Width in Pixels = %d",img->Width);
+		//printf("\nImage Width in Pixels = %d",img->Width);
 		fwrite(&(img->Width),sizeof(WORD),1,fw);
 
 
-		printf("\nImage Height = %d",img->Height);
+		//printf("\nImage Height = %d",img->Height);
 		fwrite(&(img->Height),sizeof(WORD),1,fw);
 
 
 		img->Packed = 0;
-		printf("\nPacked = %d",img->Packed);
+		//printf("\nPacked = %d",img->Packed);
 		fwrite(&(img->Packed),sizeof(BYTE),1,fw);
 
 
