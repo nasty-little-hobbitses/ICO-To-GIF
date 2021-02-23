@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
-
+#include"ourheader.h"
 // Function prototypes
 int nth_bit(int,int);		// Returns the nth bit of a number in binary form
 int three_bit(int,int);		// Returns decimal form of 3 bits starting with lsb as nth bit of a number Eg: 111 is returned as 7
