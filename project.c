@@ -231,9 +231,13 @@ int main()
 	BYTE bits[dim];
 	while( j < dim){
 	  fread(&bits[j],1,1,fr);
-    if (bits[j] > 127){
-      bits[j] = 0;
+    if (bits[j] == 0){
+      bits[j] = bits[0];
     }
+    if (bits[j] > 127){
+     bits[j] = 32;
+    }
+
 	  printf("%d,", bits[j]);
 	  j++;
 	}
