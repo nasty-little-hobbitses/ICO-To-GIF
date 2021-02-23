@@ -178,49 +178,44 @@ int main()
 	int SizeOfGCT = three_bit(header->Packed,0);
 	int NoOfGCTEnt = (1L << (SizeOfGCT + 1));
 
+	// Background Color = 0
 	header->BackgroundColor = 0;
 	fwrite(&(header->BackgroundColor),sizeof(BYTE),1,fw);
 
+	// Aspect Ratio = 0
 	header->AspectRatio = 0;
 	fwrite(&(header->AspectRatio),sizeof(BYTE),1,fw);
 
+	// Global Colour Table reading and writing till index no 127
+	RGBQUAD arr[256];
+	for(i = 0;i < 256;i++)
+	{
+		fread(&arr[i], sizeof(RGBQUAD),1,fr);
+                if(i<128)
+                {
+		        fwrite(&(arr[i].rgbRed),sizeof(BYTE),1,fw);
+		        fwrite(&(arr[i].rgbGreen),sizeof(BYTE),1,fw);
+		        fwrite(&(arr[i].rgbBlue),sizeof(BYTE),1,fw);
+                }
+	}
 
-
-		RGBQUAD arr[256];
-
-
-		for(i = 0;i < 256;i++)
-		{
-			fread(&arr[i], sizeof(RGBQUAD),1,fr);
-
-                        if(i<128)
-                        {
-			        fwrite(&(arr[i].rgbRed),sizeof(BYTE),1,fw);
-			        fwrite(&(arr[i].rgbGreen),sizeof(BYTE),1,fw);
-			        fwrite(&(arr[i].rgbBlue),sizeof(BYTE),1,fw);
-                        }
-
-		}
-
-	// int dim = y->bHeight*y->bWidth;
-	int j = 0;
-
-        y->bHeight += y->bHeight%4;
-        y->bWidth += y->bWidth%4;
+	// To accomodate for padding, height and width need to be inc accordingly (multiple of 4)
+        y->bHeight += 4 - y->bHeight%4;
+        y->bWidth += 4 - y->bWidth%4;
 	BYTE bits[y->bHeight][y->bWidth];
+	
+	// reading image data from ICO from last row
 	for(int i = y->bHeight - 1;i >= 0;i--)
         {
                 for(int j = 0;j < y->bWidth;j++)
                 {
 	                fread(&bits[i][j],1,1,fr);
-                        // if (bits[i][j] == 0)
-                        //         bits[i][j] = bits[y->bHeight - 1][0];
                         if (bits[i][j] > 127)
                                 bits[i][j] = 32;
                 }
 	}
 
-
+	// Local Image Descriptor
 	GIFIMGDESC *img;
         img = (GIFIMGDESC*)malloc(sizeof(GIFIMGDESC));
         img->Separator = 44;
@@ -230,22 +225,23 @@ int main()
         img->Height = y->bHeight;
 
 	fwrite(&(img->Separator),sizeof(BYTE),1,fw);    // indicates the presence of image or end of file
-	fwrite(&(img->Left),sizeof(WORD),1,fw);
-	fwrite(&(img->Top),sizeof(WORD),1,fw);
-	fwrite(&(img->Width),sizeof(WORD),1,fw);
-	fwrite(&(img->Height),sizeof(WORD),1,fw);
-	img->Packed = 0;
+	fwrite(&(img->Left),sizeof(WORD),1,fw);		// indicates the starting x coordinate
+	fwrite(&(img->Top),sizeof(WORD),1,fw);		// indicates the starting y coordinate
+	fwrite(&(img->Width),sizeof(WORD),1,fw);	// width of the image
+	fwrite(&(img->Height),sizeof(WORD),1,fw);	// height of the image
+	img->Packed = 0;				// packed = 0 as local colour table = 0
 	fwrite(&(img->Packed),sizeof(BYTE),1,fw);
 
-        BYTE Comp = 7;
+        BYTE Comp = 7;			// Compression factor = 7
         fwrite(&Comp,1,1,fw);
 
-        BYTE sBlkSiz = y->bWidth + 1;
-        BYTE sBlkSizEnd = 1;
+        BYTE sBlkSiz = y->bWidth + 1;	// Image sub-block size
+        BYTE sBlkSizEnd = 1;		// Last sub-block size
         BYTE zero = 0;
-        BYTE clCode = 128;
-        BYTE EOICode = 129;
+        BYTE clCode = 128;		// Clear Code
+        BYTE EOICode = 129;		// End of Info
 
+	// writing image data
         for (int i = 0; i < y->bHeight; i++ )
         {
                 fwrite(&sBlkSiz,1,1,fw);
@@ -254,17 +250,14 @@ int main()
                         fwrite(&(bits[i][j]),sizeof(BYTE),1,fw);
         }
 
-
-
+	// Last sub-block
         fwrite(&sBlkSizEnd,1,1,fw);
         fwrite(&EOICode,1,1,fw);
         fwrite(&zero,1,1,fw);
         BYTE ter = 59;
         fwrite(&ter,1,1,fw);
 
-
-
-
+	// freeing memory locations
 	free(x);
 	free(y);
 	free(z);
