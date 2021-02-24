@@ -168,7 +168,7 @@ int main(int argc, char *argv[])
  	header->ScreenHeight = y->bHeight;
 	fwrite(&(header->ScreenHeight),sizeof(WORD),1,fw);
 
-	header->Packed = 246;
+	header->Packed = 247;
 	fwrite(&(header->Packed),sizeof(BYTE),1,fw);
 
 	// to calculate size of global color table
@@ -188,21 +188,21 @@ int main(int argc, char *argv[])
 	for(i = 0;i < 256;i++)
 	{
 		fread(&arr[i], sizeof(RGBQUAD),1,fr);
-                if(i<128)
-                {
+
+
 		        fwrite(&(arr[i].rgbRed),sizeof(BYTE),1,fw);
 		        fwrite(&(arr[i].rgbGreen),sizeof(BYTE),1,fw);
 		        fwrite(&(arr[i].rgbBlue),sizeof(BYTE),1,fw);
-                }
+
 	}
 
 	// To accomodate for padding, height and width need to be inc accordingly (multiple of 4)
-	//if(y->bHeight % 4 != 0)			}
-        //	y->bHeight += 4 - y->bHeight%4;		} we can remove this part	
-	if(y->bWidth % 4 != 0)
+
+	if(y->bWidth % 4 != 0){
         	y->bWidth += 4 - y->bWidth%4;
+        }
 	BYTE bits[y->bHeight][y->bWidth];
-	
+
 	// reading image data from ICO from last row
 	for(int i = y->bHeight - 1;i >= 0;i--)
         {
