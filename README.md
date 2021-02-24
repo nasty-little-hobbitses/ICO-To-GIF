@@ -23,11 +23,15 @@ IMT2020509 Hardik Khandelwal
 
 IMT2020536 Yugaan Mangesh Hagargi
 
+
+
 Reading ICO 			- Hardik and Ankrutee
 
 Conversion + Makefile 		- Yugaan and Sougandh
 
 Reading and Writing GIF 	- Sarthak and Madhav
+
+
 
 Resources:
 
