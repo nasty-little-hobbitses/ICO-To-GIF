@@ -8,4 +8,4 @@ Commands for converting:
   1. make clean
   2. make
   3. make Proj.o
-  4. ./ICO-To-GIF <source file name> <destination file name>
+  4. ./ICO-To-GIF *source file name* *destination file name*
