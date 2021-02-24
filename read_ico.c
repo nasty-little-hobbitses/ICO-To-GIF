@@ -134,6 +134,10 @@ while( j < dim){
 }
 printf("\n");
 
+free(x);
+free(y);
+free(z);
+
 return 0;
 
 }
