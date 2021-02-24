@@ -197,8 +197,10 @@ int main(int argc, char *argv[])
 	}
 
 	// To accomodate for padding, height and width need to be inc accordingly (multiple of 4)
-        y->bHeight += 4 - y->bHeight%4;
-        y->bWidth += 4 - y->bWidth%4;
+	//if(y->bHeight % 4 != 0)			}
+        //	y->bHeight += 4 - y->bHeight%4;		} we can remove this part	
+	if(y->bWidth % 4 != 0)
+        	y->bWidth += 4 - y->bWidth%4;
 	BYTE bits[y->bHeight][y->bWidth];
 	
 	// reading image data from ICO from last row
