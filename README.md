@@ -12,17 +12,25 @@ Commands for converting:
   
 Team Members:
 IMT2020022 Meda Madhav
+
 IMT2020032 Sarthak Harne
+
 IMT2020034 Ankrutee Arora
+
 IMT2020120 Sougandh Krishna K S
+
 IMT2020509 Hardik Khandelwal
+
 IMT2020536 Yugaan Mangesh Hagargi
 
 Reading ICO 			- Hardik and Ankrutee
+
 Conversion + Makefile 		- Yugaan and Sougandh
+
 Reading and Writing GIF 	- Sarthak and Madhav
 
 Resources:
+
 https://www.fileformat.info/format/gif/egff.htm
 https://www.fileformat.info/format/bmp/spec/e27073c25463436f8a64fa789c886d9c/view.htm
 https://www.daubnet.com/en/file-format-gif
