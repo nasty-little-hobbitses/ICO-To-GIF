@@ -61,12 +61,7 @@ typedef struct tagICONIMAGE {
    BYTE            icXOR[1];      // DIB bits for XOR mask
    BYTE            icAND[1];      // DIB bits for AND mask
 } ICONIMAGE, *LPICONIMAGE;
-typedef struct {
-   unsigned char blue;
-   unsigned char green;
-   unsigned char red;
-   unsigned char alpha_trans;
-} tPixel;
+
 
 
 
@@ -113,8 +108,10 @@ printf("Offset to the image : %d\n",  y->dwImageOffset);
 fseek( fp, y->dwImageOffset , SEEK_SET );
 z = (BITMAPINFOHEADER*)malloc( sizeof( BITMAPINFOHEADER) );
 fread(z,sizeof(BITMAPINFOHEADER),1,fp);
-printf("%d %d %d %d\n",z->biBitCount,z->biWidth,z->biHeight,z->biSize );
-printf("%ld\n", ftell(fp));
+printf("Bits per pixel = %d Width = %d combined height of both masks = %d\n",z->biBitCount,z->biWidth,z->biHeight);
+printf("File pointer = %ld\n", ftell(fp));
+printf("Colour Table:\n");
+printf("I B G R Res.\n");
 
 int dim = y->bHeight*y->bWidth;
 RGBQUAD arr[256];
@@ -125,7 +122,8 @@ while(i < 256){
   i++;
 }
 
-printf("%ld\n",ftell(fp) );
+printf("File pointer = %ld\n", ftell(fp));
+printf("Pixel Data\n");
 
 int j = 0;
 BYTE bits[dim];
@@ -134,5 +132,8 @@ while( j < dim){
   printf("%d,", bits[j]);
   j++;
 }
+printf("\n");
+
+return 0;
 
 }
