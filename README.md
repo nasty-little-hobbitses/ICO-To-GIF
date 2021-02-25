@@ -18,13 +18,6 @@ Commands for converting:
  Hardik Khandelwal
  Yugaan Mangesh Hagargi
 
-**Contributions**
--Reading ICO 			- Hardik and Ankrutee
--Conversion + Makefile 		- Yugaan and Sougandh
--Reading and Writing GIF 	- Sarthak and Madhav
-
-
-
 **Resources:**
 
 https://www.fileformat.info/format/gif/egff.htm
