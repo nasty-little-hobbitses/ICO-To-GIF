@@ -11,12 +11,12 @@ Commands for converting:
   4. ./ICO-To-GIF *source file name* *destination file name*
   
 **Team Members:**
--IMT2020022 Meda Madhav
--IMT2020032 Sarthak Harne
--IMT2020034 Ankrutee Arora
--IMT2020120 Sougandh Krishna K S
--IMT2020509 Hardik Khandelwal
--IMT2020536 Yugaan Mangesh Hagargi
+ Meda Madhav
+ Sarthak Harne
+ Ankrutee Arora
+ Sougandh Krishna K S
+ Hardik Khandelwal
+ Yugaan Mangesh Hagargi
 
 **Contributions**
 -Reading ICO 			- Hardik and Ankrutee
